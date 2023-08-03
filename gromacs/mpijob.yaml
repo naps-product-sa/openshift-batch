@@ -1,0 +1,36 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: gromacs
+spec:
+  slotsPerWorker: 1
+  runPolicy:
+    cleanPodPolicy: Running
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          containers:
+          - image: image-registry.openshift-image-registry.svc:5000/mpi-testing/gromacs-data@sha256:b0c4aa5576fa3e10be2f9d1e7da3b862ad42c6df12ee415e670dd87cc1db93e6
+            name: gromacs
+            command:
+            - /bin/bash
+            - -c
+            - |
+              . /opt/spack-environment/activate.sh
+              . GMXRC.bash
+              mpirun -np 2 gmx_mpi mdrun -s benchMEM.tpr -nsteps 10000 -resethway
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          containers:
+          - image: image-registry.openshift-image-registry.svc:5000/mpi-testing/gromacs-data@sha256:b0c4aa5576fa3e10be2f9d1e7da3b862ad42c6df12ee415e670dd87cc1db93e6
+            name: gromacs
+            command:
+              - /bin/bash
+              - -c
+              - |
+                /usr/libexec/openssh/sshd-keygen rsa
+                exec /sbin/sshd -De
