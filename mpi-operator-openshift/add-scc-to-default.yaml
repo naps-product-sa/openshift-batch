@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: system:openshift:scc:mpijob
+  namespace: mpi-testing
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:mpijob
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: mpi-testing

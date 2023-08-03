@@ -1,0 +1,59 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:openshift:scc:mpijob
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - mpijob
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: mpijob is based on anyuid and allows running mpi jobs
+  name: mpijob
+priority: 10
+
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+readOnlyRootFilesystem: false
+
+allowedCapabilities:
+- SYS_CHROOT
+defaultAddCapabilities:
+- SYS_CHROOT
+requiredDropCapabilities:
+- MKNOD
+
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+
+users: []
+groups: []
+
+volumes:
+- configMap
+- csi
+- downwardAPI
+- emptyDir
+- ephemeral
+- persistentVolumeClaim
+- projected
+- secret
