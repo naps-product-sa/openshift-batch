@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authconfig
+  labels:
+    app: authconfig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authconfig
+  template:
+    metadata:
+      labels:
+        app: authconfig
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/openshift/python:latest
+        command:
+        - python3
+        - /application/app.py
+        name: python
+        volumeMounts:
+        - name: app
+          mountPath: /application
+      volumes:
+      - name: app
+        configMap:
+          name: authconfig-python

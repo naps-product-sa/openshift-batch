@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: containerssh
+  name: containerssh
+  namespace: containerssh
+spec:
+  ports:
+  - port: 2222
+    protocol: TCP
+    targetPort: 2222
+  selector:
+    app: containerssh
+  type: LoadBalancer

@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: containerssh
+
+configMapGenerator:
+- name: authconfig-python
+  files:
+  - app.py
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app: authconfig
+
+resources:
+- service.yaml
+- deployment.yaml

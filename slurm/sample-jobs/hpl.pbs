@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH --nodes=4
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=1
+#SBATCH --partition=micro
+
+cd /home/centos/hpl/bin/UNKNOWN
+./xhpl

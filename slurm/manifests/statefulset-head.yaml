@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: slurm
+  labels:
+    app: slurm
+    component: head
+spec:
+  selector:
+    matchLabels:
+      app: slurm
+      component: head
+  serviceName: "slurm"
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: slurm
+        component: head
+    spec:
+      automountServiceAccountToken: false
+      shareProcessNamespace: true
+      dnsConfig:
+        searches:
+        - slurm.slurm-system.svc.cluster.local
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: slurm
+      initContainers:
+      - name: fix-munge-paths
+        image: quay.io/jkincl/munge:latest
+        command:
+        - sh
+        - -c
+        - /scripts/fix-munge-paths.sh
+        volumeMounts:
+        - name: munge-key
+          mountPath: /etc/munge
+        - name: munge-key-secret
+          mountPath: /var/secrets/munge.key
+          subPath: munge.key
+        - name: munge-socket
+          mountPath: /run/munge
+      containers:
+      - name: munge
+        image: quay.io/jkincl/munge:latest
+        command:
+        - /sbin/munged
+        - -F
+        securityContext:
+          runAsUser: 500
+          runAsGroup: 500
+          fsGroup: 500
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: munge-key
+          mountPath: /etc/munge
+      - name: slurm
+        image: quay.io/jkincl/slurm:latest
+        command:
+        - /sbin/slurmctld
+        - -D
+        securityContext:
+          runAsUser: 501
+          runAsGroup: 501
+        volumeMounts:
+        - name: slurm-data
+          mountPath: /var/spool/slurmd
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: slurm-conf
+          mountPath: /etc/slurm.conf
+          subPath: slurm.conf
+        # - name: shared
+        #   mountPath: /home
+      volumes:
+      - name: munge-socket
+        emptyDir: {}
+      - name: slurm-conf
+        configMap:
+          name: slurm-conf
+
+      - name: munge-key
+        emptyDir: {}
+      - name: munge-key-secret
+        secret:
+          secretName: munge-key
+
+      # - name: shared
+      #   nfs:
+      #     server: 10.1.0.62
+      #     path: /
+
+  volumeClaimTemplates:
+  - metadata:
+      name: slurm-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

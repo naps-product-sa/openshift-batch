@@ -1,0 +1,34 @@
+name: Build Slurm Container Images
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: naps-product-sa
+        password: ${{ secrets.ORG_PACKAGING }}
+
+    - name: Build image - munge
+      run: |
+        docker build --build-arg MUNGE_VERSION=0.5.15 slurm/images/munge --tag ghcr.io/naps-product-sa/munge:latest
+        docker push ghcr.io/naps-product-sa/munge:latest
+
+    - name: Build image - slurm
+      run: |
+        docker build --build-arg SLURM_VERSION=23.02.4 slurm/images/slurm --tag ghcr.io/naps-product-sa/slurm:latest
+        docker push ghcr.io/naps-product-sa/slurm:latest
+
+    - name: Build image - login
+      run: |
+        docker build slurm/images/login --tag ghcr.io/naps-product-sa/login:latest
+        docker push ghcr.io/naps-product-sa/login:latest

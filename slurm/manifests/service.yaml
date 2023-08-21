@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: slurm
+  labels:
+    app: slurm
+spec:
+  ports:
+  - port: 6817
+    name: slurmctld
+  - port: 6818
+    name: slurmd
+  clusterIP: None
+  selector:
+    app: slurm

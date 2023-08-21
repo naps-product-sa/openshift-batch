@@ -1,0 +1,18 @@
+namespace: slurm-system
+
+commonLabels:
+  app: slurm
+
+resources:
+  - service.yaml
+  - statefulset-head.yaml
+  - statefulset-compute.yaml
+  - serviceaccount.yaml
+  - clusterrolebinding.yaml
+
+configMapGenerator:
+- name: slurm-conf
+  files:
+    - configs/slurm.conf
+  # options:
+  #   disableNameSuffixHash: true

@@ -1,0 +1,84 @@
+ssh:
+  hostkeys:
+    - /etc/containerssh/host.key
+auth:
+  url: http://authconfig:8080
+log:
+  level: debug
+backend: kubernetes
+kubernetes:
+  connection:
+    host: kubernetes.default.svc
+    cacertFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+  pod:
+    consoleContainerNumber: 0
+    metadata:
+      namespace: slurm-system
+    spec:
+      automountServiceAccountToken: false
+      shareProcessNamespace: true
+      dnsConfig:
+        searches:
+        - slurm.slurm-system.svc.cluster.local
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: slurm
+      initContainers:
+      - name: fix-munge-paths
+        image: quay.io/jkincl/munge:latest
+        command:
+        - sh
+        - -c
+        - /scripts/fix-munge-paths.sh
+        volumeMounts:
+        - name: munge-key
+          mountPath: /etc/munge
+        - name: munge-key-secret
+          mountPath: /var/secrets/munge.key
+          subPath: munge.key
+        - name: munge-socket
+          mountPath: /run/munge
+      containers:
+      - name: shell
+        image: quay.io/jkincl/login:latest
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: slurm-conf
+          mountPath: /etc/slurm.conf
+          subPath: slurm.conf
+        - name: shared
+          mountPath: /home
+      - name: munge
+        image: quay.io/jkincl/munge:latest
+        command:
+        - /sbin/munged
+        - -F
+        securityContext:
+          runAsUser: 500
+          runAsGroup: 500
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: munge-key
+          mountPath: /etc/munge
+      volumes:
+      - name: munge-socket
+        emptyDir: {}
+      - name: munge-key
+        emptyDir: {}
+      - name: munge-key-secret
+        secret:
+          secretName: munge-key
+      - name: slurm-conf
+        configMap:
+          name: slurm-conf
+
+      - name: shared
+        nfs:
+          server: 10.1.0.62
+          path: /

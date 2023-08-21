@@ -1,0 +1,16 @@
+resources:
+  - deployment.yaml
+  - ns.yaml
+  - rbac.yaml
+  - serviceaccount.yaml
+  - service.yaml
+
+  - authconfig
+
+configMapGenerator:
+- name: containerssh-config
+  files:
+    - configs/config.yaml
+  options:
+    disableNameSuffixHash: true
+  namespace: containerssh

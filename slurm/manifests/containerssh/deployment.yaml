@@ -1,0 +1,49 @@
+---
+# Deploy ContainerSSH with the service account and configmap applied.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: containerssh
+  name: containerssh
+  namespace: containerssh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: containerssh
+  template:
+    metadata:
+      labels:
+        app: containerssh
+    spec:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+      containers:
+      - image: containerssh/containerssh:0.4.1
+        imagePullPolicy: IfNotPresent
+        name: containerssh
+        ports:
+        - containerPort: 2222
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/containerssh/host.key
+          name: hostkey
+          readOnly: true
+          subPath: host.key
+        - mountPath: /etc/containerssh/config.yaml
+          name: config
+          readOnly: true
+          subPath: config.yaml
+      restartPolicy: Always
+      serviceAccount: containerssh
+      serviceAccountName: containerssh
+      volumes:
+      - name: hostkey
+        secret:
+          secretName: containerssh-hostkey
+      - configMap:
+          name: containerssh-config
+        name: config
