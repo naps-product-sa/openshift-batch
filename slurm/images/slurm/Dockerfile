@@ -1,4 +1,4 @@
-FROM ghcr.io/naps-product-sa/munge:latest as build
+FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest as build
 ARG SLURM_VERSION=23.02.4
 
 RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 perl perl-devel
@@ -15,7 +15,7 @@ RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLRUM_VERSION}.tar.bz2 &
     make && \
     make install
 
-FROM ghcr.io/naps-product-sa/munge:latest
+FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest
 
 RUN dnf install -y bind-utils hostname iproute
 
