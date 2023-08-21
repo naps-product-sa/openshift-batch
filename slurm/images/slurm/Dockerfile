@@ -6,9 +6,9 @@ RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 p
 RUN mkdir /tmp/src
 WORKDIR /tmp/src
 
-RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLRUM_VERSION}.tar.bz2 && \
-    tar xf slurm-${SLRUM_VERSION}.tar.bz2 && \
-    cd slurm-${SLRUM_VERSION} && \
+RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2 && \
+    tar xf slurm-${SLURM_VERSION}.tar.bz2 && \
+    cd slurm-${SLURM_VERSION} && \
     ./configure \
      --prefix=/usr \
      --sysconfdir=/etc && \
