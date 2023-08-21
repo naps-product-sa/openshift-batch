@@ -20,7 +20,7 @@ jobs:
 
     - name: Build image - munge
       run: |
-        docker build --build-arg MUNGE_VERSION=0.5.15 slurm/images/munge --tag ghcr.io/${{ github.repository }}/:munge-latest
+        docker build --build-arg MUNGE_VERSION=0.5.15 slurm/images/munge --tag ghcr.io/${{ github.repository }}:munge-latest
         docker push ghcr.io/${{ github.repository }}:munge-latest
 
     - name: Build image - slurm
