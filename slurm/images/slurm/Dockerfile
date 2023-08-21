@@ -1,7 +1,7 @@
 FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest as build
 ARG SLURM_VERSION=23.02.4
 
-RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 perl perl-devel git autoconf
+RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 perl perl-devel git autoconf automake
 
 RUN mkdir /tmp/src
 WORKDIR /tmp/src
