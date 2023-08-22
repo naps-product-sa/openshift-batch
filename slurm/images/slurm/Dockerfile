@@ -28,7 +28,7 @@ RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2 &
     cd slurm-${SLURM_VERSION} && \
     ./configure \
      --prefix=/usr \
-     --sysconfdir=/etc && \
+     --sysconfdir=/etc \
      --with-jwt=/usr/local/ && \
     make && \
     make install
