@@ -11,7 +11,7 @@ ARG SLURM_VERSION=23.02.4
 
 # RUN yum-config-manager --add-repo https://mirror.stream.centos.org/9-stream/BaseOS/\$basearch/os/ && yum-config-manager --add-repo https://mirror.stream.centos.org/9-stream/AppStream/\$basearch/os/
 
-RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 perl perl-devel git autoconf automake libtool diffutils jansson jansson-devel http-parser-devel
+RUN dnf install --enablerepo=crb -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng bzip2 perl perl-devel git autoconf automake libtool diffutils jansson jansson-devel http-parser-devel
 
 RUN mkdir /tmp/src
 WORKDIR /tmp/src
