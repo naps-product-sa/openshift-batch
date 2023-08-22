@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9:latest as build
+FROM quay.io/centos/centos:stream9 as build
 ARG MUNGE_VERSION=0.5.15
 
 RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng
@@ -17,7 +17,7 @@ RUN curl -LO https://github.com/dun/munge/releases/download/munge-${MUNGE_VERSIO
     make && \
     make install
 
-FROM registry.access.redhat.com/ubi9:latest
+FROM quay.io/centos/centos:stream9
 
 COPY --from=build /usr /usr
 COPY --from=build /etc /etc
