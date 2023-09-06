@@ -2,7 +2,7 @@ FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest as build
 ARG SLURM_VERSION=23.02.4
 
 RUN dnf install --enablerepo=crb -y xz gcc procps-ng bzip2 perl git autoconf automake libtool diffutils jansson \
-    openssl-devel bzip2-devel zlib-devel jansson-devel http-parser-devel perl-devel
+    openssl-devel bzip2-devel zlib-devel jansson-devel http-parser-devel json-c-devel perl-devel
 
 RUN mkdir /tmp/src
 WORKDIR /tmp/src
@@ -29,7 +29,7 @@ FROM scratch as tmp
 # libjwt
 COPY --from=build /usr/include/jwt* /usr/include/
 COPY --from=build /usr/lib64/libjwt* /usr/lib/
-COPY --from=build /usr/lib64/pkgconfig/libjwt* /usr/lib/pkgconfig/
+COPY --from=build /usr/lib64/pkgconfig/libjwt* /usr/lib64/pkgconfig/
 COPY --from=build /usr/bin/jwt* /usr/bin/
 
 #slurm
@@ -43,12 +43,14 @@ FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest
 
 COPY --from=tmp / /
 
-RUN dnf install -y bind-utils hostname iproute
+RUN dnf install -y procps-ng bind-utils hostname iproute jansson http-parser
 
 RUN ldconfig && ldconfig -n /usr/lib64/slurm && \
     useradd -r -u 501 slurm && \
     mkdir /var/spool/slurmctld && \
-    chown slurm:slurm /var/spool/slurmctld
+    chown slurm:slurm /var/spool/slurmctld && \
+    mkdir /var/spool/slurmd && \
+    chown slurm:slurm /var/spool/slurmd    
 
 WORKDIR /
 CMD ['/sbin/slurmd', '-D']
