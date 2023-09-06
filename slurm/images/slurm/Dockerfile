@@ -19,7 +19,7 @@ WORKDIR /tmp/src
 RUN git clone --depth 1 --single-branch -b v1.12.0 https://github.com/benmcollins/libjwt.git libjwt && \
     cd libjwt && \
     autoreconf -v --install && \
-    ./configure --prefix=/usr/local && \
+    ./configure --prefix=/usr && \
     make -j && \
     make install
 
@@ -29,7 +29,7 @@ RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2 &
     ./configure \
      --prefix=/usr \
      --sysconfdir=/etc \
-     --with-jwt=/usr/local/ && \
+     --with-jwt=/usr && \
     make && \
     make install
 
