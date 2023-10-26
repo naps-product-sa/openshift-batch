@@ -1,0 +1,19 @@
+resources:
+- namespace.yaml
+- claim.yaml
+- nfs-ganesha-server-and-external-provisioner/deployment.yaml
+- nfs-ganesha-server-and-external-provisioner/rbac.yaml
+- nfs-ganesha-server-and-external-provisioner/class.yaml
+- scc.yaml
+
+namespace: nfs
+
+patches:
+- target:
+    version: v1
+    kind: Deployment
+    name: nfs-provisioner
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/volumes/0
+      value: {"name": "export-volume", "persistentVolumeClaim": {"claimName": "nfs-storage"}}
