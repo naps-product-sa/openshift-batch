@@ -4,6 +4,7 @@ commonLabels:
   app: slurm
 
 resources:
+  - namespace.yaml
   - service.yaml
   - statefulset-head.yaml
   - statefulset-compute.yaml

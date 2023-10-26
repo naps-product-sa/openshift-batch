@@ -91,5 +91,5 @@ spec:
           name: slurm-conf
       # - name: shared
       #   nfs:
-      #     server: 10.1.0.62
+      #     server: 10.0.159.200
       #     path: /
