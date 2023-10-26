@@ -74,8 +74,8 @@ spec:
         - name: slurm-conf
           mountPath: /etc/slurm.conf
           subPath: slurm.conf
-        # - name: shared
-        #   mountPath: /home
+        - name: shared
+          mountPath: /home
       volumes:
       - name: munge-socket
         emptyDir: {}
@@ -89,10 +89,9 @@ spec:
         secret:
           secretName: munge-key
 
-      # - name: shared
-      #   nfs:
-      #     server: 10.0.159.200
-      #     path: /
+      - name: shared
+        persistentVolumeClaim:
+          claimName: shared-home
 
   volumeClaimTemplates:
   - metadata:

@@ -26,7 +26,7 @@ kubernetes:
       serviceAccountName: slurm
       initContainers:
       - name: fix-munge-paths
-        image: quay.io/jkincl/munge:latest
+        image: ghcr.io/naps-product-sa/openshift-batch:munge-latest
         command:
         - sh
         - -c
@@ -39,9 +39,37 @@ kubernetes:
           subPath: munge.key
         - name: munge-socket
           mountPath: /run/munge
+      - name: add-jobs
+        image: ghcr.io/naps-product-sa/openshift-batch:login-latest
+        command:
+        - sh
+        - -c
+        - |
+          mkdir /home/user1
+          chown 1000:1000 /home/user1
+          chmod 700 /home/user1
+          
+          cat << EOF > /home/user1/job.pbs
+          #!/bin/bash
+          #SBATCH --nodes=1                # node count
+          #SBATCH --time=00:01:00          # total run time limit (HH:MM:SS)
+
+          sleep 10
+          EOF
+
+          cat << EOF > /home/user1/job-3nodes.pbs
+          #!/bin/bash
+          #SBATCH --nodes=3                # node count
+          #SBATCH --time=00:01:00          # total run time limit (HH:MM:SS)
+
+          sleep 10
+          EOF
+        volumeMounts:
+        - name: shared
+          mountPath: /home
       containers:
       - name: shell
-        image: quay.io/jkincl/login:latest
+        image: ghcr.io/naps-product-sa/openshift-batch:login-latest
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
@@ -54,7 +82,7 @@ kubernetes:
         - name: shared
           mountPath: /home
       - name: munge
-        image: quay.io/jkincl/munge:latest
+        image: ghcr.io/naps-product-sa/openshift-batch:munge-latest
         command:
         - /sbin/munged
         - -F
@@ -79,6 +107,5 @@ kubernetes:
           name: slurm-conf
 
       - name: shared
-        nfs:
-          server: 10.1.0.62
-          path: /
+        persistentVolumeClaim:
+          claimName: shared-home

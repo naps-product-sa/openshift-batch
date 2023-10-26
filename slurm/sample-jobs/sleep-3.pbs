@@ -1,0 +1,5 @@
+#!/bin/bash
+#SBATCH --nodes=3                # node count
+#SBATCH --time=00:01:00          # total run time limit (HH:MM:SS)
+
+sleep 10

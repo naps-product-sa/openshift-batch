@@ -10,10 +10,11 @@ resources:
   - statefulset-compute.yaml
   - serviceaccount.yaml
   - clusterrolebinding.yaml
+  - claim.yaml
 
 configMapGenerator:
 - name: slurm-conf
   files:
     - configs/slurm.conf
-  # options:
-  #   disableNameSuffixHash: true
+  options:
+    disableNameSuffixHash: true
