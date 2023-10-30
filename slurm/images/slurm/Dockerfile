@@ -28,8 +28,7 @@ FROM docker.io/golang:1.21 as build-exporter
 
 WORKDIR /usr/src/app
 
-RUN git clone https://github.com/vpenso/prometheus-slurm-exporter.git && \
-    cd prometheus-slurm-exporter && \
+RUN git clone https://github.com/vpenso/prometheus-slurm-exporter.git /usr/src/app && \
     make bin/prometheus-slurm-exporter
 
 FROM scratch as tmp
