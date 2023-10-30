@@ -13,7 +13,7 @@ $ oc apply -k simple-nfs/
 ## Todo
 
 - AWS FSx Lustre support in demo
-- Look at more batch projects in the ecosystem
+- Move users to external ldap maybe with https://github.com/glauth/glauth
 - Implement UID/GID enforcement per namespace
 - More advanced view of how jobs are scheduled and placed on the cluster
 - Add and schedule workloads to specialized hardware like GPU or IB
