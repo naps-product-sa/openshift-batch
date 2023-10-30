@@ -8,8 +8,9 @@ spec:
   ports:
   - port: 6817
     name: slurmctld
-  - port: 6818
-    name: slurmd
+  - port: 8080
+    name: scrape
   clusterIP: None
   selector:
     app: slurm
+    component: head
