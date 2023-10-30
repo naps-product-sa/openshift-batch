@@ -31,7 +31,7 @@ spec:
       serviceAccountName: slurm
       initContainers:
       - name: fix-munge-paths
-        image: ghcr.io/naps-product-sa/openshift-batch:munge-latest
+        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
         command:
         - sh
         - -c
@@ -46,7 +46,7 @@ spec:
           mountPath: /run/munge
       containers:
       - name: munge
-        image: ghcr.io/naps-product-sa/openshift-batch:munge-latest
+        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
         command:
         - /sbin/munged
         - -F
@@ -60,7 +60,7 @@ spec:
         - name: munge-key
           mountPath: /etc/munge
       - name: slurm
-        image: ghcr.io/naps-product-sa/openshift-batch:slurm-latest
+        image: ghcr.io/naps-product-sa/openshift-batch/slurm:latest
         command:
         - /sbin/slurmd
         - -D
