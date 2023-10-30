@@ -28,6 +28,9 @@ spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 10
       serviceAccountName: slurm
+      securityContext:
+        fsGroup: 501
+        fsGroupChangePolicy: Always
       initContainers:
       - name: fix-munge-paths
         image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
@@ -44,20 +47,6 @@ spec:
         - name: munge-socket
           mountPath: /run/munge
       containers:
-      - name: munge
-        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
-        command:
-        - /sbin/munged
-        - -F
-        securityContext:
-          runAsUser: 500
-          runAsGroup: 500
-          fsGroup: 500
-        volumeMounts:
-        - name: munge-socket
-          mountPath: /run/munge
-        - name: munge-key
-          mountPath: /etc/munge
       - name: slurm
         image: ghcr.io/naps-product-sa/openshift-batch/slurm:latest
         command:
@@ -68,7 +57,7 @@ spec:
           runAsGroup: 501
         volumeMounts:
         - name: slurm-data
-          mountPath: /var/spool/slurmd
+          mountPath: /var/spool/slurmctld
         - name: munge-socket
           mountPath: /run/munge
         - name: slurm-conf
@@ -76,6 +65,32 @@ spec:
           subPath: slurm.conf
         - name: shared
           mountPath: /home
+      - name: exporter
+        image: ghcr.io/naps-product-sa/openshift-batch/slurm:latest
+        command:
+        - /usr/bin/prometheus-slurm-exporter
+        securityContext:
+          runAsUser: 501
+          runAsGroup: 501
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: slurm-conf
+          mountPath: /etc/slurm.conf
+          subPath: slurm.conf
+      - name: munge
+        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
+        command:
+        - /sbin/munged
+        - -F
+        securityContext:
+          runAsUser: 500
+          runAsGroup: 500
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: munge-key
+          mountPath: /etc/munge
       volumes:
       - name: munge-socket
         emptyDir: {}

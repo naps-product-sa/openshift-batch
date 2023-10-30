@@ -45,20 +45,6 @@ spec:
         - name: munge-socket
           mountPath: /run/munge
       containers:
-      - name: munge
-        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
-        command:
-        - /sbin/munged
-        - -F
-        securityContext:
-          runAsUser: 500
-          runAsGroup: 500
-          fsGroup: 500
-        volumeMounts:
-        - name: munge-socket
-          mountPath: /run/munge
-        - name: munge-key
-          mountPath: /etc/munge
       - name: slurm
         image: ghcr.io/naps-product-sa/openshift-batch/slurm:latest
         command:
@@ -78,6 +64,20 @@ spec:
           subPath: slurm.conf
         - name: shared
           mountPath: /home
+      - name: munge
+        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
+        command:
+        - /sbin/munged
+        - -F
+        securityContext:
+          runAsUser: 500
+          runAsGroup: 500
+          fsGroup: 500
+        volumeMounts:
+        - name: munge-socket
+          mountPath: /run/munge
+        - name: munge-key
+          mountPath: /etc/munge
       volumes:
       - name: munge-socket
         emptyDir: {}
