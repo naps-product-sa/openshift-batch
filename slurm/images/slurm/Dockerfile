@@ -30,7 +30,7 @@ WORKDIR /usr/src/app
 
 RUN git clone https://github.com/vpenso/prometheus-slurm-exporter.git && \
     cd prometheus-slurm-exporter && \
-    make
+    make bin/prometheus-slurm-exporter
 
 FROM scratch as tmp
 
