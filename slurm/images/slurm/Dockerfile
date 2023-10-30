@@ -1,4 +1,4 @@
-FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest as build
+FROM ghcr.io/naps-product-sa/openshift-batch/munge:latest as build
 ARG SLURM_VERSION=23.02.4
 
 RUN dnf install --enablerepo=crb -y xz gcc procps-ng bzip2 perl git autoconf automake libtool diffutils jansson \
@@ -39,7 +39,7 @@ COPY --from=build /usr/bin/s* /usr/bin/
 COPY --from=build /usr/sbin/slurm* /usr/sbin/
 COPY --from=build /usr/share/man/ /usr/share/man/
 
-FROM ghcr.io/naps-product-sa/openshift-batch:munge-latest
+FROM ghcr.io/naps-product-sa/openshift-batch/munge:latest
 
 COPY --from=tmp / /
 

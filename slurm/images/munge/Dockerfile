@@ -1,6 +1,8 @@
 FROM quay.io/centos/centos:stream9 as build
 ARG MUNGE_VERSION=0.5.15
 
+LABEL org.opencontainers.image.source="https://github.com/naps-product-sa/openshift-batch"
+
 RUN dnf install -y xz gcc openssl-devel bzip2-devel zlib-devel procps-ng
 
 RUN mkdir /tmp/src
