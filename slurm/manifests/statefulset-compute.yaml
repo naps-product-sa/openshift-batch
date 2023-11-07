@@ -68,6 +68,14 @@ spec:
         - -Z
         # - --conf
         # - RealMemory=4000
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - |
+                scontrol update nodename=$HOSTNAME state=down reason=shutdown
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -81,9 +89,6 @@ spec:
           mountPath: /home
       - name: munge
         image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
-        command:
-        - /sbin/munged
-        - -F
         securityContext:
           runAsUser: 500
           runAsGroup: 500

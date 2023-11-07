@@ -52,7 +52,8 @@ RUN useradd user1 && \
 
 RUN mkdir /scripts
 ADD fix-munge-paths.sh /scripts
+ADD munged-container.sh /scripts
 RUN chmod +x /scripts/*.sh
 
 WORKDIR /
-CMD ['/sbin/munged', '-F']
+CMD ['/bin/bash', '/scripts/munged-container.sh']
