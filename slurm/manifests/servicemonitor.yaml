@@ -1,3 +1,4 @@
+# https://docs.openshift.com/container-platform/4.13/monitoring/managing-metrics.html
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -5,12 +6,12 @@ metadata:
 spec:
   endpoints:
   - interval: 30s
+    scrapeTimeout: 30s
     port: scrape
     scheme: http
   selector:
     matchLabels:
       app: slurm
-      component: head
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

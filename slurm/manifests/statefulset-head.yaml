@@ -25,6 +25,7 @@ spec:
       dnsConfig:
         searches:
         - slurm.slurm-system.svc.cluster.local
+        - compute.slurm-system.svc.cluster.local
       enableServiceLinks: false
       terminationGracePeriodSeconds: 10
       serviceAccountName: slurm

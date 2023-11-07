@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: compute
+  labels:
+    app: slurm
+    component: compute
+spec:
+  ports:
+  - port: 6818
+    name: slurmd
+  selector:
+    app: slurm
+    component: compute
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -15,6 +29,7 @@ spec:
   serviceName: "compute"
   replicas: 1
   minReadySeconds: 10
+  terminationGracePeriodSeconds: 60
   template:
     metadata:
       labels:

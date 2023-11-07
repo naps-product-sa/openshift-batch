@@ -11,7 +11,10 @@ resources:
   - serviceaccount.yaml
   - clusterrolebinding.yaml
   - claim.yaml
+
   - servicemonitor.yaml
+  - scaledobject.yaml
+  - serviceaccount-slurm-metrics.yaml
 
 configMapGenerator:
 - name: slurm-conf
