@@ -20,6 +20,5 @@ configMapGenerator:
 - name: slurm-conf
   files:
     - configs/slurm.conf
-    - configs/munge-init
   options:
     disableNameSuffixHash: true

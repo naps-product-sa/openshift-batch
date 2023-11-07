@@ -29,7 +29,6 @@ spec:
   serviceName: "compute"
   replicas: 1
   minReadySeconds: 10
-  terminationGracePeriodSeconds: 60
   template:
     metadata:
       labels:
@@ -42,7 +41,7 @@ spec:
         searches:
         - slurm.slurm-system.svc.cluster.local
       enableServiceLinks: false
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 15
       serviceAccountName: slurm
       initContainers:
       - name: fix-munge-paths
@@ -89,6 +88,9 @@ spec:
           mountPath: /home
       - name: munge
         image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
+        command:
+        - /bin/bash
+        - /scripts/munged-container.sh
         securityContext:
           runAsUser: 500
           runAsGroup: 500
