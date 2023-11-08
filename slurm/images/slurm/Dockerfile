@@ -26,7 +26,10 @@ RUN curl -LO https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2 &
 
 FROM docker.io/golang:1.21 as build-exporter
 
-RUN go install github.com/rivosinc/prometheus-slurm-exporter@v1.0.1
+WORKDIR /usr/src/app
+
+RUN git clone https://github.com/vpenso/prometheus-slurm-exporter.git /usr/src/app && \
+    make bin/prometheus-slurm-exporter
 
 FROM scratch as tmp
 
@@ -44,7 +47,7 @@ COPY --from=build /usr/sbin/slurm* /usr/sbin/
 COPY --from=build /usr/share/man/ /usr/share/man/
 
 #prometheus exporter
-COPY --from=build-exporter /go/bin/prometheus-slurm-exporter /usr/bin/prometheus-slurm-exporter
+COPY --from=build-exporter /usr/src/app/bin/prometheus-slurm-exporter /usr/bin/prometheus-slurm-exporter
 
 FROM ghcr.io/naps-product-sa/openshift-batch/munge:latest
 
