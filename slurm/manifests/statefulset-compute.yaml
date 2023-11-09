@@ -35,6 +35,7 @@ spec:
         app: slurm
         component: compute
     spec:
+      priorityClassName: high-priority-batch
       automountServiceAccountToken: false
       shareProcessNamespace: true
       dnsConfig:
@@ -43,6 +44,20 @@ spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 15
       serviceAccountName: slurm
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - slurm
+              - key: component
+                operator: In
+                values:
+                - compute
+            topologyKey: "kubernetes.io/hostname"
       initContainers:
       - name: fix-munge-paths
         image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
@@ -74,7 +89,12 @@ spec:
               - /bin/bash
               - -c
               - |
-                scontrol update nodename=$HOSTNAME state=down reason=shutdown
+                scontrol delete nodename=$HOSTNAME
+        resources:
+          requests:
+            cpu: 3
+          limits:
+            cpu: 3
         securityContext:
           runAsUser: 0
           runAsGroup: 0
