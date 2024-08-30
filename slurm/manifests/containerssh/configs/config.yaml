@@ -26,7 +26,7 @@ kubernetes:
       serviceAccountName: slurm
       initContainers:
       - name: fix-munge-paths
-        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
+        image: image-registry.openshift-image-registry.svc:5000/slurm-system/munge:latest
         command:
         - sh
         - -c
@@ -40,7 +40,7 @@ kubernetes:
         - name: munge-socket
           mountPath: /run/munge
       - name: add-jobs
-        image: ghcr.io/naps-product-sa/openshift-batch/login:latest
+        image: image-registry.openshift-image-registry.svc:5000/slurm-system/login:latest
         command:
         - sh
         - -c
@@ -69,7 +69,7 @@ kubernetes:
           mountPath: /home
       containers:
       - name: shell
-        image: ghcr.io/naps-product-sa/openshift-batch/login:latest
+        image: image-registry.openshift-image-registry.svc:5000/slurm-system/login:latest
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
@@ -82,7 +82,7 @@ kubernetes:
         - name: shared
           mountPath: /home
       - name: munge
-        image: ghcr.io/naps-product-sa/openshift-batch/munge:latest
+        image: image-registry.openshift-image-registry.svc:5000/slurm-system/munge:latest
         command:
         - /sbin/munged
         - -F

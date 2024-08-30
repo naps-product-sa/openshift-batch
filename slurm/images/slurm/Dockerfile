@@ -1,5 +1,5 @@
 FROM ghcr.io/naps-product-sa/openshift-batch/munge:latest as build
-ARG SLURM_VERSION=23.02.4
+ARG SLURM_VERSION=24.05.3
 
 RUN dnf install --enablerepo=crb -y xz gcc procps-ng bzip2 perl git autoconf automake libtool diffutils jansson \
     openssl-devel bzip2-devel zlib-devel jansson-devel http-parser-devel json-c-devel perl-devel
