@@ -53,7 +53,7 @@ FROM ghcr.io/naps-product-sa/openshift-batch/munge:latest
 
 COPY --from=tmp / /
 
-RUN dnf install -y procps-ng bind-utils hostname iproute jansson http-parser
+RUN dnf install -y ncurses procps-ng bind-utils hostname iproute jansson http-parser
 
 RUN ldconfig && ldconfig -n /usr/lib64/slurm && \
     useradd -r -u 501 slurm && \
