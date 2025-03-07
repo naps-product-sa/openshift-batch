@@ -3,6 +3,11 @@ namespace: slurm-system
 commonLabels:
   app: slurm
 
+images:
+- name: busybox
+  newName: alpine
+  newTag: "3.6"
+
 resources:
   - namespace.yaml
   - service.yaml
@@ -13,9 +18,9 @@ resources:
   - claim.yaml
   - priorityclass.yaml
 
-  - servicemonitor.yaml
-  - scaledobject.yaml
-  - serviceaccount-slurm-metrics.yaml
+  # - servicemonitor.yaml
+  # - scaledobject.yaml
+  # - serviceaccount-slurm-metrics.yaml
 
 configMapGenerator:
 - name: slurm-conf
@@ -25,6 +30,3 @@ configMapGenerator:
     disableNameSuffixHash: true
     labels:
       app: slurm
-- name: cgroup-conf
-  files:
-    - configs/cgroup.conf

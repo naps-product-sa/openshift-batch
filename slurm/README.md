@@ -1,11 +1,37 @@
 # Slurm
 
+> [!IMPORTANT]
+> This is one way of doing Slurm on OpenShift but a better way is now to use [Slinky](https://slurm.schedmd.com/slinky.html)
+> from SchedMD. These manifests are left for historical reasons and are no longer being updated.
+
 ## Install
 
-### Apply manifests
+### Create image builds and build images
 
 ```
-oc apply -k manifests/
+oc adm new-project slurm-system
+```
+
+```
+oc new-build -n slurm-system --name munge --binary
+oc new-build -n slurm-system --name slurm --binary
+oc new-build -n slurm-system --name login --binary
+```
+
+#### Option 1: Set up local ImageStreams to pull through from upstream
+
+```
+oc tag --source=docker ghcr.io/naps-product-sa/openshift-batch/munge:latest slurm-system/munge:latest --reference-policy=local
+oc tag --source=docker ghcr.io/naps-product-sa/openshift-batch/slurm:latest slurm-system/slurm:latest --reference-policy=local
+oc tag --source=docker ghcr.io/naps-product-sa/openshift-batch/login:latest slurm-system/login:latest --reference-policy=local
+```
+
+#### Option 2: Build the images yourself
+
+```
+oc start-build -n slurm-system munge --from-dir=images/munge --follow --no-cache
+oc start-build -n slurm-system slurm --from-dir=images/slurm --follow --no-cache
+oc start-build -n slurm-system login --from-dir=images/login --follow --no-cache
 ```
 
 ### Create munge secret key
@@ -14,19 +40,12 @@ oc apply -k manifests/
 oc -n slurm-system create secret generic munge-key --from-file=munge.key=<(dd status=none if=/dev/urandom bs=1 count=128)
 ```
 
-### Create image builds and build images
+### Apply manifests
 
 ```
-oc new-build --name munge --binary
-oc new-build --name slurm --binary
-oc new-build --name login --binary
+oc apply -k manifests/
 ```
 
-```
-oc start-build munge --from-dir=images/munge --follow --no-cache
-oc start-build slurm --from-dir=images/slurm --follow --no-cache
-oc start-build login --from-dir=images/login --follow --no-cache
-```
 
 ## Slurm job
 
@@ -85,7 +104,7 @@ oc get pods -n containerssh
 oc get pods -n slurm-system
 ```
 
-You are ready for the demo and you can return to [the main demo README](../README.md) 
+You are ready for the demo and you can return to [the main demo README](../README.md)
 
 ### Login
 

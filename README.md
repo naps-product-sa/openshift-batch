@@ -4,7 +4,7 @@ Testing batch capabilities of OpenShift
 
 ## Slurm on OpenShift
 
-see [slurm/README.md](slurm/README.md)
+see [slurm/README.md](slurm/README.md¡)
 
 ## Simple NFS Storage
 

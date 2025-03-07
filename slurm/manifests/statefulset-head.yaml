@@ -79,9 +79,6 @@ spec:
         - name: slurm-conf
           mountPath: /etc/slurm.conf
           subPath: slurm.conf
-        - name: cgroup-conf
-          mountPath: /etc/cgroup.conf
-          subPath: cgroup.conf
       - name: munge
         image: image-registry.openshift-image-registry.svc:5000/slurm-system/munge:latest
         command:
@@ -101,9 +98,6 @@ spec:
       - name: slurm-conf
         configMap:
           name: slurm-conf
-      - name: cgroup-conf
-        configMap:
-          name: cgroup-conf
 
       - name: munge-key
         emptyDir: {}
