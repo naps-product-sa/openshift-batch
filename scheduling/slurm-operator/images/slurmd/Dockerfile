@@ -4,5 +4,5 @@ RUN <<EOR
 set -xeuo pipefail
 dnf -q makecache --refresh
 dnf -q -y install vim git python3
-rm *.rpm && dnf clean all
+dnf clean all
 EOR
