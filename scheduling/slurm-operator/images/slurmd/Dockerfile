@@ -5,7 +5,7 @@ RUN <<EOR
 set -xeuo pipefail
 dnf -q makecache --refresh
 # https://spack.readthedocs.io/en/latest/getting_started.html
-dnf group install "Development Tools"
-dnf install gcc-gfortran redhat-lsb-core python3 unzip
+dnf -y group install "Development Tools"
+dnf -q -y install gcc-gfortran redhat-lsb-core python3 unzip
 dnf clean all
 EOR
