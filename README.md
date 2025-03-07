@@ -4,7 +4,7 @@ Testing batch capabilities of OpenShift
 
 ## Slurm on OpenShift
 
-see [slurm/README.md](slurm/README.md¡)
+Check out [Slinky](https://slurm.schedmd.com/slinky.html)
 
 ## Simple NFS Storage
 
@@ -21,4 +21,3 @@ $ oc apply -k simple-nfs/
 - Implement UID/GID enforcement per namespace
 - More advanced view of how jobs are scheduled and placed on the cluster
 - Add and schedule workloads to specialized hardware like GPU or IB
-
